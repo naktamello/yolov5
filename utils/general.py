@@ -47,13 +47,18 @@ except (ImportError, AssertionError):
 
 from ultralytics.utils.checks import check_requirements
 
-from utils import TryExcept, emojis
-from utils.downloads import curl_download, gsutil_getsize
-from utils.metrics import box_iou, fitness
-
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[1]  # YOLOv5 root directory
 RANK = int(os.getenv('RANK', -1))
+
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add ROOT to PATH
+if platform.system() != 'Windows':
+    ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+
+from utils import TryExcept, emojis
+from utils.downloads import curl_download, gsutil_getsize
+from utils.metrics import box_iou, fitness
 
 # Settings
 NUM_THREADS = min(8, max(1, os.cpu_count() - 1))  # number of YOLOv5 multiprocessing threads
@@ -810,6 +815,7 @@ def scale_boxes(img1_shape, boxes, img0_shape, ratio_pad=None):
     # Rescale boxes (xyxy) from img1_shape to img0_shape
     if ratio_pad is None:  # calculate from img0_shape
         gain = min(img1_shape[0] / img0_shape[0], img1_shape[1] / img0_shape[1])  # gain  = old / new
+        print(gain)
         pad = (img1_shape[1] - img0_shape[1] * gain) / 2, (img1_shape[0] - img0_shape[0] * gain) / 2  # wh padding
     else:
         gain = ratio_pad[0][0]
