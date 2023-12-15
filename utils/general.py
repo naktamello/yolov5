@@ -56,9 +56,9 @@ if str(ROOT) not in sys.path:
 if platform.system() != 'Windows':
     ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-from utils import TryExcept, emojis
-from utils.downloads import curl_download, gsutil_getsize
-from utils.metrics import box_iou, fitness
+from saktune.measure.yolo.yolov5.utils import TryExcept, emojis
+from saktune.measure.yolo.yolov5.utils.downloads import curl_download, gsutil_getsize
+from saktune.measure.yolo.yolov5.utils.metrics import box_iou, fitness
 
 # Settings
 NUM_THREADS = min(8, max(1, os.cpu_count() - 1))  # number of YOLOv5 multiprocessing threads
@@ -982,7 +982,7 @@ def non_max_suppression(
     return output
 
 
-def strip_optimizer(f='best.pt', s=''):  # from utils.general import *; strip_optimizer()
+def strip_optimizer(f='best.pt', s=''):  # from saktune.measure.yolo.yolov5.utils.general import *; strip_optimizer()
     # Strip optimizer from 'f' to finalize training, optionally save as 's'
     x = torch.load(f, map_location=torch.device('cpu'))
     if x.get('ema'):
